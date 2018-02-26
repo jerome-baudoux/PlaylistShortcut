@@ -38,8 +38,10 @@ public class PlayListAdapter extends BaseAdapter {
         if (view == null) {
             view = layoutInflater.inflate(R.layout.playlist, null);
         }
-        TextView textView = view.findViewById(R.id.textView);
-        textView.setText(playLists.get(i).getName());
+        TextView title = view.findViewById(R.id.titleView);
+        title.setText(playLists.get(i).getName());
+        TextView subtitle = view.findViewById(R.id.subtitleView);
+        subtitle.setText(R.string.songs);
         return view;
     }
 }

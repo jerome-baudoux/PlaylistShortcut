@@ -3,4 +3,6 @@
     <string name="play">Play</string>
     <string name="add">Add</string>
     <string name="title">Title</string>
+    <string name="subtitle">Subtitle</string>
+    <string name="songs">0 Songs</string>
 </resources>

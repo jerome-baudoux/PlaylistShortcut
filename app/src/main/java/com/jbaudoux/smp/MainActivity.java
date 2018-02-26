@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         if (!requestPermissionForReadExtertalStorage(READ_PLAY_LISTS)) {
             return new ArrayList<>();
         }
-
         String idKey = MediaStore.Audio.Playlists._ID;
         String nameKey = MediaStore.Audio.Playlists.NAME;
         String[] columns = {idKey, nameKey};
@@ -46,7 +45,11 @@ public class MainActivity extends AppCompatActivity {
             int keyIndex = playListsCursor.getColumnIndex(idKey);
             int nameIndex = playListsCursor.getColumnIndex(nameKey);
             while (playListsCursor.moveToNext()) {
-                playLists.add(new PlayList(playListsCursor.getInt(keyIndex), playListsCursor.getString(nameIndex)));
+                playLists.add(new PlayList(
+                        playListsCursor.getInt(keyIndex),
+                        0,
+                        playListsCursor.getString(nameIndex)
+                ));
             }
             return playLists;
         }
