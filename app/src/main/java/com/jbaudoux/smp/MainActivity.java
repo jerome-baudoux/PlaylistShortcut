@@ -1,8 +1,13 @@
 package com.jbaudoux.smp;
 
 import android.Manifest;
+import android.app.SearchManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -51,9 +56,53 @@ public class MainActivity extends AppCompatActivity {
                         playListsCursor.getString(nameIndex)
                 ));
             }
+
+            playSongsFromAPlaylist(playLists.get(0).getName());
+
             return playLists;
         }
+    }
 
+    public void playSongsFromAPlaylist(String playlistName) {
+        Intent intent = new Intent(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
+        intent.putExtra(MediaStore.EXTRA_MEDIA_FOCUS,
+                MediaStore.Audio.Artists.ENTRY_CONTENT_TYPE);
+        intent.putExtra(MediaStore.EXTRA_MEDIA_PLAYLIST, playlistName);
+        intent.putExtra(SearchManager.QUERY, "playlist " + playlistName);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
+    public void playSongsFromAPlaylistOld(int playListID){
+        String[] ARG_STRING = {MediaStore.Audio.Media._ID,MediaStore.Audio.Media.DATA,MediaStore.Audio.Media.DISPLAY_NAME,MediaStore.Video.Media.SIZE,android.provider.MediaStore.MediaColumns.DATA};
+        Uri membersUri = MediaStore.Audio.Playlists.Members.getContentUri("external", playListID);
+        Cursor songsWithingAPlayList = getContentResolver().query(membersUri, ARG_STRING, null, null, "RANDOM()");
+        int theSongIDIwantToPlay = 0; // PLAYING FROM THE FIRST SONG
+        if(songsWithingAPlayList != null) {
+            songsWithingAPlayList.moveToPosition(theSongIDIwantToPlay);
+            String DataStream = songsWithingAPlayList.getString(4);
+            playMusic(DataStream);
+            songsWithingAPlayList.close();
+        }
+    }
+
+    public void playMusic(String DataStream){
+        MediaPlayer mpObject = new MediaPlayer();
+        if(DataStream == null)
+            return;
+        try {
+            // Make sure the media player will acquire a wake-lock while
+            // playing. If we don't do that, the CPU might go to sleep while the
+            // song is playing, causing playback to stop.
+            mpObject.setWakeMode(this.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+            mpObject.setLooping(true);
+            mpObject.setDataSource(DataStream);
+            mpObject.prepare();
+            mpObject.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean requestPermissionForReadExtertalStorage(int action) {
