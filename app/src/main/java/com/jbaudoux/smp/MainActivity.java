@@ -5,9 +5,7 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadPlayLists() {
         ListView listView = findViewById(R.id.playlistView);
-        listView.setAdapter(new PlayListAdapter(fetchPlayLists(), getLayoutInflater()));
+        listView.setAdapter(new PlayListAdapter(fetchPlayLists(), this));
     }
 
     private List<PlayList> fetchPlayLists() {
@@ -52,12 +50,10 @@ public class MainActivity extends AppCompatActivity {
             while (playListsCursor.moveToNext()) {
                 playLists.add(new PlayList(
                         playListsCursor.getInt(keyIndex),
-                        0,
+                        getSongCount(playListsCursor.getInt(keyIndex)),
                         playListsCursor.getString(nameIndex)
                 ));
             }
-
-            playSongsFromAPlaylist(playLists.get(0).getName());
 
             return playLists;
         }
@@ -74,35 +70,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void playSongsFromAPlaylistOld(int playListID){
-        String[] ARG_STRING = {MediaStore.Audio.Media._ID,MediaStore.Audio.Media.DATA,MediaStore.Audio.Media.DISPLAY_NAME,MediaStore.Video.Media.SIZE,android.provider.MediaStore.MediaColumns.DATA};
+    private int getSongCount(int playListID) {
+        String[] ARG_STRING = {MediaStore.Audio.Media._ID};
         Uri membersUri = MediaStore.Audio.Playlists.Members.getContentUri("external", playListID);
-        Cursor songsWithingAPlayList = getContentResolver().query(membersUri, ARG_STRING, null, null, "RANDOM()");
-        int theSongIDIwantToPlay = 0; // PLAYING FROM THE FIRST SONG
-        if(songsWithingAPlayList != null) {
-            songsWithingAPlayList.moveToPosition(theSongIDIwantToPlay);
-            String DataStream = songsWithingAPlayList.getString(4);
-            playMusic(DataStream);
-            songsWithingAPlayList.close();
+        Cursor songsWithinAPlayList = getContentResolver().query(membersUri, ARG_STRING, null, null, null);
+        if (songsWithinAPlayList == null) {
+            return 0;
         }
-    }
-
-    public void playMusic(String DataStream){
-        MediaPlayer mpObject = new MediaPlayer();
-        if(DataStream == null)
-            return;
-        try {
-            // Make sure the media player will acquire a wake-lock while
-            // playing. If we don't do that, the CPU might go to sleep while the
-            // song is playing, causing playback to stop.
-            mpObject.setWakeMode(this.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-            mpObject.setLooping(true);
-            mpObject.setDataSource(DataStream);
-            mpObject.prepare();
-            mpObject.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        return songsWithinAPlayList.getCount();
     }
 
     public boolean requestPermissionForReadExtertalStorage(int action) {
