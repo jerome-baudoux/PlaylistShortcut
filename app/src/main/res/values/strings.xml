@@ -5,4 +5,5 @@
     <string name="title">Title</string>
     <string name="subtitle">Subtitle</string>
     <string name="songs">%1$d Song(s)</string>
+    <string name="no_data">No playlist found on the device</string>
 </resources>

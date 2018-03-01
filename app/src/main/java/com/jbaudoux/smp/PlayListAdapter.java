@@ -1,5 +1,7 @@
 package com.jbaudoux.smp;
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -11,11 +13,15 @@ import java.util.List;
 public class PlayListAdapter extends BaseAdapter {
 
     private final List<PlayList> playLists;
-    private final MainActivity mainActivity;
+    private final MediaService mediaService;
+    private LayoutInflater layoutInflater;
+    private Context context;
 
-    public PlayListAdapter(List<PlayList> playLists, MainActivity mainActivity) {
+    public PlayListAdapter(List<PlayList> playLists, MainActivity mediaService, LayoutInflater layoutInflater, Context context) {
         this.playLists = playLists;
-        this.mainActivity = mainActivity;
+        this.mediaService = mediaService;
+        this.layoutInflater = layoutInflater;
+        this.context = context;
     }
 
     @Override
@@ -37,7 +43,7 @@ public class PlayListAdapter extends BaseAdapter {
     public View getView(final int i, View view, ViewGroup viewGroup) {
         final PlayList playList = playLists.get(i);
         if (view == null) {
-            view = mainActivity.getLayoutInflater().inflate(R.layout.playlist, null);
+            view = layoutInflater.inflate(R.layout.playlist, viewGroup, false);
         }
 
         // Title
@@ -46,13 +52,21 @@ public class PlayListAdapter extends BaseAdapter {
 
         // Label
         TextView subtitle = view.findViewById(R.id.subtitleView);
-        subtitle.setText(mainActivity.getResources().getString(R.string.songs, playList.getCount()));
+        subtitle.setText(context.getResources().getString(R.string.songs, playList.getCount()));
 
         // Button
         ImageButton playButton = view.findViewById(R.id.playButton);
         playButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                mainActivity.playSongsFromAPlaylist(playList.getName());
+                mediaService.playSongsFromAPlaylist(playList);
+            }
+        });
+
+        // Button
+        ImageButton addButton = view.findViewById(R.id.addButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mediaService.createShortcutForPlaylist(playList);
             }
         });
 
