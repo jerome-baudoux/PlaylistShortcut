@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Playlist Shortcut</string>
+    <string name="play">Jouer</string>
+    <string name="add">Ajouter</string>
+    <string name="title">Titre</string>
+    <string name="subtitle">Sous-titre</string>
+    <string name="songs">%1$d Musique(s)</string>
+    <string name="no_data">Aucune playlist musicale n\'a été trouvée</string>
+    <string name="about">A propos</string>
+</resources>

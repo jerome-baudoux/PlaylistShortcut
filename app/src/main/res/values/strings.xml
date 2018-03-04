@@ -1,9 +1,10 @@
 <resources>
-    <string name="app_name">Shortcut Music Player</string>
+    <string name="app_name">Playlist Shortcut</string>
     <string name="play">Play</string>
     <string name="add">Add</string>
     <string name="title">Title</string>
     <string name="subtitle">Subtitle</string>
     <string name="songs">%1$d Song(s)</string>
-    <string name="no_data">No playlist found on the device</string>
+    <string name="no_data">No music playlist found on the device</string>
+    <string name="about">About</string>
 </resources>
