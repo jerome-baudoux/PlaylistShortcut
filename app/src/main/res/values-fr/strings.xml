@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Playlist Shortcut</string>
     <string name="play">Jouer</string>
     <string name="add">Ajouter</string>
     <string name="title">Titre</string>
