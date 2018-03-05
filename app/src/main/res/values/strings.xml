@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Playlist Shortcuts</string>
+    <string name="app_version">v 1.0</string>
+    <string name="app_author">Jérôme Baudoux</string>
     <string name="play">Play</string>
     <string name="add">Add</string>
     <string name="title">Title</string>
@@ -7,4 +9,6 @@
     <string name="songs">%1$d Song(s)</string>
     <string name="no_data">No music playlist found on the device</string>
     <string name="about">About</string>
+    <string name="github">GitHub</string>
+    <string name="website">Website</string>
 </resources>
